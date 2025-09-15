@@ -117,6 +117,17 @@
         const capitalizedId = id ? id.charAt(0).toUpperCase() + id.slice(1) : "Home";
 
         $('#title').text("Welcome to Red Hat Store - " + capitalizedId);
+
+        // highlight link
+        $(`a[href*="id=${id}"]`).css({
+            'background-color': '#6c757d',
+            'color': 'white'
+        });
+
+        // remove onmouseover and onmouseout
+        if (id) {
+            $(`a[href*="id=${id}"]`).removeAttr('onmouseover onmouseout');
+        }
     });
 </script>
 
