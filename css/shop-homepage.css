@@ -1,0 +1,9 @@
+body {
+    padding-top: 56px;
+}
+
+/* Fix for carousel width to match row width */
+#carouselExampleIndicators {
+    width: 100%;
+    max-width: 100%;
+}
