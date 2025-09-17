@@ -53,14 +53,8 @@
             <h1 class="my-4">
                 <img src="/img/logo.png" width="100%" />
             </h1>
-            <div class="list-group">
+            <div class="list-group" id="store-list">
                 <div class="list-group-item" style="background-color: #6c757d;color: white;">Nearest Store</div>
-                <a href="/store/index.html?id=jakarta" class="list-group-item" onmouseover="this.style='background-color: #6c757d;color: white;'"
-                   onmouseout="this.style=''">Jakarta</a>
-                <a href="/store/index.html?id=surabaya" class="list-group-item" onmouseover="this.style='background-color: #6c757d;color: white;'"
-                   onmouseout="this.style=''">Surabaya</a>
-                <a href="/store/index.html?id=bandung" class="list-group-item" onmouseover="this.style='background-color: #6c757d;color: white;'"
-                   onmouseout="this.style=''">Bandung</a>
             </div>
 
         </div>
@@ -113,21 +107,38 @@
     }
 
     $(document).ready(function(){
-        const id = getUrlParameter('id');
-        const capitalizedId = id ? id.charAt(0).toUpperCase() + id.slice(1) : "Home";
+        // Store link template
+        const storeLinkTemplate = (store) => `
+            <a href="/store/index.html?id=${store.storeId.toLowerCase()}"
+               class="list-group-item"
+               onmouseover="this.style='background-color: #6c757d;color: white;'"
+               onmouseout="this.style=''">${store.storeName}</a>`;
 
-        $('#title').text("Welcome to Red Hat Store - " + capitalizedId);
+        // Fetch stores from API
+        $.get('/api/store/', function (stores) {
+            const storeList = $('#store-list');
+            // Keep header
+            const header = `<div class="list-group-item" style="background-color: #6c757d;color: white;">Nearest Store</div>`;
+            // Generate store links
+            const storeLinks = stores.map(store => storeLinkTemplate(store)).join('');
+            storeList.html(header + storeLinks);
 
-        // highlight link
-        $(`a[href*="id=${id}"]`).css({
-            'background-color': '#6c757d',
-            'color': 'white'
+            const id = getUrlParameter('id');
+            const capitalizedId = id ? id.charAt(0).toUpperCase() + id.slice(1) : "Home";
+
+            $('#title').text("Welcome to Red Hat Store - " + capitalizedId);
+
+            // highlight link
+            $(`a[href*="id=${id}"]`).css({
+                'background-color': '#6c757d',
+                'color': 'white'
+            });
+
+            // remove onmouseover and onmouseout
+            if (id) {
+                $(`a[href*="id=${id}"]`).removeAttr('onmouseover onmouseout');
+            }
         });
-
-        // remove onmouseover and onmouseout
-        if (id) {
-            $(`a[href*="id=${id}"]`).removeAttr('onmouseover onmouseout');
-        }
     });
 </script>
 
